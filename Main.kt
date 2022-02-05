@@ -17,6 +17,22 @@ fun userInput() {
     workData = ""
 }
 
+fun gameBoard(row: Int, col: Int) {
+    for (idx in 1..col)
+        print(" $idx")
+    println()
+    for (idxR in 0 until row) {
+        for (idxC in 0..col) {
+            if (idxC == col)
+                println("|")
+            else
+                print("| ")
+        }
+    }
+    for (idx in 0..col * 2)
+        print("=")
+}
+
 fun main() {
     println("Connect Four")
     println("First player's name: ")
@@ -25,8 +41,8 @@ fun main() {
     val playerTwo = readLine()!!
     message()
 
-    var row: Int
-    var col: Int
+    var row = 0
+    var col = 0
     var flag = false
     initData = readLine()!!.trim().lowercase()
     var dataSize = initData.length
@@ -95,4 +111,5 @@ fun main() {
             }
         }
     }
+    gameBoard(row, col)
 }
