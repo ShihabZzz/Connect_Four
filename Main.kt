@@ -31,6 +31,7 @@ fun gameBoard(row: Int, col: Int) {
     }
     for (idx in 0..col * 2)
         print("=")
+    println()
 }
 
 fun main() {
@@ -112,4 +113,76 @@ fun main() {
         }
     }
     gameBoard(row, col)
+
+    val listRec = MutableList(col) { 0 }
+    for (idx in 0 until col)
+        listRec[idx] = row
+
+    val diagram = MutableList(10) {
+        MutableList(10) { 0 }
+    }
+
+    var disk = ""
+    var iTrack = 1
+    while (disk != "end") {
+        if (iTrack % 2 == 1)
+            println("$playerOne's turn:")
+        else
+            println("$playerTwo's turn:")
+
+        disk = readLine()!!
+        if (disk == "end")
+            break
+
+        var diskFlag = false
+        for (idx in disk.indices) {
+            if ((disk[idx] in '0'..'9'))
+                continue
+            else {
+                diskFlag = true
+                break
+            }
+        }
+
+        if (diskFlag) {
+            println("Incorrect column number")
+            continue
+        }
+        var diskInt = disk.toInt()
+        if (diskInt !in 1..col) {
+            println("The column number is out of range (1 - $col)")
+            continue
+        }
+        diskInt--
+
+        if (listRec[diskInt] > 0) {
+            if (iTrack % 2 == 1)
+                diagram[listRec[diskInt] - 1][diskInt] = 1
+            else
+                diagram[listRec[diskInt] - 1][diskInt] = 2
+            listRec[diskInt]--
+
+            for (idx in 1..col)
+                print(" $idx")
+            println()
+            for (idxR in 0 until row) {
+                for (idxC in 0..col) {
+                    if (diagram[idxR][idxC] == 1)
+                        print("|o")
+                    else if (diagram[idxR][idxC] == 2)
+                        print("|*")
+                    else print("| ")
+                }
+                println()
+            }
+            for (idx in 0..col * 2)
+                print("=")
+            println()
+        } else {
+            println("Column ${diskInt + 1} is full")
+            continue
+        }
+        iTrack++
+    }
+    println("Game over!")
 }
