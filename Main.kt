@@ -124,7 +124,7 @@ fun main() {
 
     var disk = ""
     var iTrack = 1
-    while (disk != "end") {
+    loop@ while (disk != "end") {
         if (iTrack % 2 == 1)
             println("$playerOne's turn:")
         else
@@ -178,6 +178,106 @@ fun main() {
             for (idx in 0..col * 2)
                 print("=")
             println()
+
+            // Horizontal
+            for (i in 0 until row) {
+                for (j in 0 until col) {
+                    if (iTrack % 2 == 1) {
+                        if (diagram[i][j] == 1 && (j + 3) <= (col - 1)) {
+                            if (diagram[i][j + 1] == 1 && diagram[i][j + 2] == 1 && diagram[i][j + 3] == 1) {
+                                println("Player $playerOne won")
+                                break@loop
+                            }
+                        } else continue
+                    } else {
+                        if (diagram[i][j] == 2 && (j + 3) <= (col - 1)) {
+                            if (diagram[i][j + 1] == 2 && diagram[i][j + 2] == 2 && diagram[i][j + 3] == 2) {
+                                println("Player $playerTwo won")
+                                break@loop
+                            }
+                        } else continue
+                    }
+                }
+            }
+
+            // Vertical
+            for (i in 0 until col) {
+                for (j in 0 until row) {
+                    if (iTrack % 2 == 1) {
+                        if (diagram[j][i] == 1 && (j + 3) <= (row - 1)) {
+                            if (diagram[j + 1][i] == 1 && diagram[j + 2][i] == 1 && diagram[j + 3][i] == 1) {
+                                println("Player $playerOne won")
+                                break@loop
+                            }
+                        } else continue
+                    } else {
+                        if (diagram[j][i] == 2 && (j + 3) <= (row - 1)) {
+                            if (diagram[j + 1][i] == 2 && diagram[j + 2][i] == 2 && diagram[j + 3][i] == 2) {
+                                println("Player $playerTwo won")
+                                break@loop
+                            }
+                        } else continue
+                    }
+                }
+            }
+
+            // Diagonal-Increasing
+            for (i in 0 until row) {
+                for (j in 0 until col) {
+                    if (iTrack % 2 == 1) {
+                        if (diagram[i][j] == 1 && (i + 3) <= (row - 1) && (j + 3) <= (col - 1)) {
+                            if (diagram[i + 1][j + 1] == 1 && diagram[i + 2][j + 2] == 1 && diagram[i + 3][j + 3] == 1) {
+                                println("Player $playerOne won")
+                                break@loop
+                            }
+                        } else continue
+                    } else {
+                        if (diagram[i][j] == 2 && (i + 3) <= (row - 1) && (j + 3) <= (col - 1)) {
+                            if (diagram[i + 1][j + 1] == 2 && diagram[i + 2][j + 2] == 2 && diagram[i + 3][j + 3] == 2) {
+                                println("Player $playerTwo won")
+                                break@loop
+                            }
+                        } else continue
+                    }
+                }
+            }
+
+            // Diagonal-Decreasing
+            for (i in 0 until row) {
+                for (j in 0 until col) {
+                    if (iTrack % 2 == 1) {
+                        if (diagram[i][j] == 1 && (i + 3) <= (row - 1) && (j - 3) >= 0) {
+                            if (diagram[i + 1][j - 1] == 1 && diagram[i + 2][j - 2] == 1 && diagram[i + 3][j - 3] == 1) {
+                                println("Player $playerOne won")
+                                break@loop
+                            }
+                        } else continue
+                    } else {
+                        if (diagram[i][j] == 2 && (i + 3) <= (row - 1) && (j - 3) >= 0) {
+                            if (diagram[i + 1][j - 1] == 2 && diagram[i + 2][j - 2] == 2 && diagram[i + 3][j - 3] == 2) {
+                                println("Player $playerTwo won")
+                                break@loop
+                            }
+                        } else continue
+                    }
+                }
+            }
+
+            // board-free
+            var boardFree = false
+            for (i in 0 until row) {
+                for (j in 0 until col) {
+                    if (diagram[i][j] == 0) {
+                        boardFree = true
+                        break
+                    }
+                }
+            }
+            if (!boardFree) {
+                println("It is a draw")
+                break@loop
+            }
+
         } else {
             println("Column ${diskInt + 1} is full")
             continue
