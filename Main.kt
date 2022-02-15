@@ -5,6 +5,10 @@ const val defCol = 7
 var initData = ""
 var workData = ""
 
+val diagram = MutableList(10) {
+    MutableList(10) { 0 }
+}
+
 fun message() {
     println(
         "Set the board dimensions (Rows x Columns)\n" +
@@ -23,11 +27,14 @@ fun gameBoard(row: Int, col: Int) {
     println()
     for (idxR in 0 until row) {
         for (idxC in 0..col) {
-            if (idxC == col)
-                println("|")
-            else
-                print("| ")
+            when {
+                diagram[idxR][idxC] == 1 -> print("|o")
+                diagram[idxR][idxC] == 2 -> print("|*")
+                idxC == col -> print("|")
+                else -> print("| ")
+            }
         }
+        println()
     }
     for (idx in 0..col * 2)
         print("=")
@@ -118,10 +125,6 @@ fun main() {
     for (idx in 0 until col)
         listRec[idx] = row
 
-    val diagram = MutableList(10) {
-        MutableList(10) { 0 }
-    }
-
     var disk = ""
     var iTrack = 1
     loop@ while (disk != "end") {
@@ -156,30 +159,15 @@ fun main() {
         diskInt--
 
         if (listRec[diskInt] > 0) {
-            if (iTrack % 2 == 1)
-                diagram[listRec[diskInt] - 1][diskInt] = 1
-            else
-                diagram[listRec[diskInt] - 1][diskInt] = 2
+            when {
+                iTrack % 2 == 1 -> diagram[listRec[diskInt] - 1][diskInt] = 1
+                else -> diagram[listRec[diskInt] - 1][diskInt] = 2
+            }
             listRec[diskInt]--
 
-            for (idx in 1..col)
-                print(" $idx")
-            println()
-            for (idxR in 0 until row) {
-                for (idxC in 0..col) {
-                    if (diagram[idxR][idxC] == 1)
-                        print("|o")
-                    else if (diagram[idxR][idxC] == 2)
-                        print("|*")
-                    else print("| ")
-                }
-                println()
-            }
-            for (idx in 0..col * 2)
-                print("=")
-            println()
+            gameBoard(row, col)
 
-            // Horizontal
+            // Horizontal-Check
             for (i in 0 until row) {
                 for (j in 0 until col) {
                     if (iTrack % 2 == 1) {
@@ -200,7 +188,7 @@ fun main() {
                 }
             }
 
-            // Vertical
+            // Vertical-Check
             for (i in 0 until col) {
                 for (j in 0 until row) {
                     if (iTrack % 2 == 1) {
@@ -221,7 +209,7 @@ fun main() {
                 }
             }
 
-            // Diagonal-Increasing
+            // Diagonal_Increasing-Check
             for (i in 0 until row) {
                 for (j in 0 until col) {
                     if (iTrack % 2 == 1) {
@@ -242,7 +230,7 @@ fun main() {
                 }
             }
 
-            // Diagonal-Decreasing
+            // Diagonal_Decreasing-Check
             for (i in 0 until row) {
                 for (j in 0 until col) {
                     if (iTrack % 2 == 1) {
@@ -263,7 +251,7 @@ fun main() {
                 }
             }
 
-            // board-free
+            // Board_Free-Check
             var boardFree = false
             for (i in 0 until row) {
                 for (j in 0 until col) {
